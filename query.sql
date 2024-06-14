@@ -1,1 +1,1 @@
-select Spieler_ID, Familienname, Vorname, cast((Torhueter + Verteidiger + Mittelfeldspieler + Stuermer) as int64) as positions_played from Spieler where positions_played > 1 order by Spieler_ID desc, positions_played asc limit 10;
+select Mannschafts_ID, Mannschaftsname, Mannschaftscode from Mannschaften where Herrenmannschaft = 1 and Damenmannschaft = 1 order by Mannschafts_ID asc limit 10;
