@@ -1,1 +1,1 @@
-select Mannschafts_ID, Mannschaftsname, Mannschaftscode from Mannschaften where Regionname = 'South America' order by Mannschafts_ID desc limit 10;
+select Turnieranzahl, Spieler_ID, Familienname, Vorname from Spieler where Verteidiger = 1 and Turnieranzahl > 0 order by Turnieranzahl desc, Spieler_ID desc limit 10;
