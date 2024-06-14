@@ -1,1 +1,1 @@
-select Turnieranzahl, Spieler_ID, Familienname, Vorname from Spieler where Verteidiger = 1 and Turnieranzahl > 0 order by Turnieranzahl desc, Spieler_ID desc limit 10;
+select Spieler_ID, Familienname, Vorname, cast((Torhueter + Verteidiger + Mittelfeldspieler + Stuermer) as int64) as positions_played from Spieler where positions_played > 1 order by Spieler_ID desc, positions_played asc limit 10;
