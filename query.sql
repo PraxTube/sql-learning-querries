@@ -1,18 +1,14 @@
 SELECT
-    S.Spieler_ID,
-    S.Familienname,
-    S.Vorname,
+    M.Regionname,
+    count(*) AS Anzahl
 FROM
     Spieler S
     INNER JOIN Spielerauftritte A ON S.Spieler_ID = A.Spieler_ID
-    INNER JOIN Spiele SP ON A.Spiel_ID = SP.Spiel_ID
+    INNER JOIN Mannschaften M ON A.Mannschafts_ID = M.Mannschafts_ID
 WHERE
-    SP.Gruppenphase = 1
+    S.Weiblich = 0
 GROUP BY
-    S.Spieler_ID,
-    S.Familienname,
-    S.Vorname
+    M.Regionname
 ORDER BY
-    S.Spieler_ID DESC
-LIMIT 10;
+    M.Regionname ASC;
 
