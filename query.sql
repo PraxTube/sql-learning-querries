@@ -1,1 +1,12 @@
-select Mannschafts_ID, Mannschaftsname, Mannschaftscode from Mannschaften where Herrenmannschaft = 1 and Damenmannschaft = 1 order by Mannschafts_ID asc limit 10;
+select 
+    K.Konfoederationscode, 
+    count(*) AS 'Anzahl an Schiedsrichter'
+from 
+    Schiedsrichter S
+inner join 
+    Konfoederationen K 
+on 
+    S.Konfoederations_ID = K.Konfoederations_ID
+group by 
+    K.Konfoederationscode
+order by K.Konfoederationscode desc;
