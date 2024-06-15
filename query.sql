@@ -2,18 +2,18 @@ SELECT
     S.Spieler_ID,
     S.Familienname,
     S.Vorname,
-    count(*) AS Auftritte
+    count(*) AS scored_Tore
 FROM
     Spieler S
-    INNER JOIN Spielerauftritte A ON S.Spieler_ID = A.Spieler_ID
+    INNER JOIN Tore T ON S.Spieler_ID = T.Spieler_ID
+WHERE
+    S.Verteidiger = 1
 GROUP BY
     S.Spieler_ID,
     S.Familienname,
     S.Vorname
-HAVING
-    count(*) > 5
 ORDER BY
     S.Spieler_ID DESC,
-    Auftritte ASC
+    scored_Tore DESC
 LIMIT 10;
 
