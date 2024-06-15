@@ -1,14 +1,17 @@
 SELECT
-    M.Regionname,
-    count(*) AS Anzahl
+    Turnier_ID,
+    Spieler_ID,
+    count(*) AS played_Spiele
 FROM
-    Spieler S
-    INNER JOIN Spielerauftritte A ON S.Spieler_ID = A.Spieler_ID
-    INNER JOIN Mannschaften M ON A.Mannschafts_ID = M.Mannschafts_ID
-WHERE
-    S.Weiblich = 0
+    Spielerauftritte
 GROUP BY
-    M.Regionname
+    Turnier_ID,
+    Spieler_ID
+HAVING
+    played_Spiele > 0
 ORDER BY
-    M.Regionname ASC;
+    played_Spiele ASC,
+    Turnier_ID DESC,
+    Spieler_ID DESC
+LIMIT 10;
 
