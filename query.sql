@@ -1,17 +1,29 @@
 SELECT
-    Turnier_ID,
-    Spieler_ID,
-    count(*) AS played_Spiele
+    S.Spieler_ID,
+    TR.Turniername,
+    S.Familienname,
+    S.Vorname,
+    COUNT(*) AS scored_Tore
 FROM
-    Spielerauftritte
+    Spieler S
+    INNER JOIN Tore T ON S.Spieler_ID = T.Spieler_ID
+    INNER JOIN Turniere TR ON T.Turnier_ID = TR.Turnier_ID
+WHERE
+    S.Spieler_ID IN (
+        SELECT
+            Spieler_ID,
+        FROM
+            Spieler
+        WHERE
+            Turnieranzahl < 2)
 GROUP BY
-    Turnier_ID,
-    Spieler_ID
-HAVING
-    played_Spiele > 0
+    S.Spieler_ID,
+    TR.Turniername,
+    S.Familienname,
+    S.Vorname
 ORDER BY
-    played_Spiele ASC,
-    Turnier_ID DESC,
-    Spieler_ID DESC
+    S.Spieler_ID DESC,
+    TR.Turniername ASC,
+    scored_Tore DESC
 LIMIT 10;
 
