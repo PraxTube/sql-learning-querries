@@ -1,34 +1,36 @@
-WITH AverageGoals AS (
+WITH TurnierCount AS (
     SELECT
-        AVG(Tore_scored) AS Average_Tore
-    FROM (
-        SELECT
-            Turnier_ID,
-            COUNT(*) AS Tore_scored
-        FROM
-            Tore
-        GROUP BY
-            Turnier_ID)
-),
-TournamentsWithGoals AS (
-    SELECT
-        Turnier_ID,
-        COUNT(*) AS Tore_scored
+        COUNT(DISTINCT Turnier_ID) AS turnier_count
     FROM
-        Tore
+        Spielerauftritte
+),
+PositionCounts AS (
+    SELECT
+        Positionscode,
+        Turnier_ID,
+        COUNT(*) AS count_positions
+    FROM
+        Spielerauftritte
     GROUP BY
+        Positionscode,
         Turnier_ID
+),
+AveragePositions AS (
+    SELECT
+        Positionscode,
+        sum(count_positions) AS avg_count_positions
+    FROM
+        PositionCounts
+    GROUP BY
+        Positionscode
 )
 SELECT
-    t.Turnier_ID,
-    t.Tore_scored
+    A.Positionscode,
+    A.avg_count_positions / T.turnier_count AS Average
 FROM
-    TournamentsWithGoals t,
-    AverageGoals a
-WHERE
-    t.Tore_scored > 0
-    AND t.Tore_scored > a.Average_Tore
+    AveragePositions A,
+    TurnierCount T
 ORDER BY
-    t.Turnier_ID DESC
+    A.Positionscode ASC
 LIMIT 10;
 
