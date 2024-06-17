@@ -1,36 +1,30 @@
-WITH TurnierCount AS (
-    SELECT
-        COUNT(DISTINCT Turnier_ID) AS turnier_count
-    FROM
-        Spielerauftritte
-),
-PositionCounts AS (
-    SELECT
-        Positionscode,
-        Turnier_ID,
-        COUNT(*) AS count_positions
-    FROM
-        Spielerauftritte
-    GROUP BY
-        Positionscode,
-        Turnier_ID
-),
-AveragePositions AS (
-    SELECT
-        Positionscode,
-        sum(count_positions) AS avg_count_positions
-    FROM
-        PositionCounts
-    GROUP BY
-        Positionscode
-)
+CREATE VIEW Union_Turnier_IDs AS
 SELECT
-    A.Positionscode,
-    A.avg_count_positions / T.turnier_count AS Average
+    Turnier_ID,
+    Spieler_ID
 FROM
-    AveragePositions A,
-    TurnierCount T
+    tore
+UNION
+SELECT
+    Turnier_ID,
+    Spieler_ID
+FROM
+    Spielerauftritte;
+
+SELECT
+    COUNT(G.Spieler_ID) AS scored_Tore,
+    A.Spieler_ID,
+    A.Turnier_ID
+FROM
+    Union_Turnier_IDs A
+    LEFT JOIN Tore G ON A.Turnier_ID = G.Turnier_ID
+        AND A.Spieler_ID = G.Spieler_ID
+GROUP BY
+    A.Spieler_ID,
+    A.Turnier_ID
 ORDER BY
-    A.Positionscode ASC
+    scored_Tore ASC,
+    A.Spieler_ID DESC,
+    A.Turnier_ID ASC
 LIMIT 10;
 
