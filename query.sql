@@ -1,29 +1,34 @@
-SELECT
-    S.Spieler_ID,
-    TR.Turniername,
-    S.Familienname,
-    S.Vorname,
-    COUNT(*) AS scored_Tore
-FROM
-    Spieler S
-    INNER JOIN Tore T ON S.Spieler_ID = T.Spieler_ID
-    INNER JOIN Turniere TR ON T.Turnier_ID = TR.Turnier_ID
-WHERE
-    S.Spieler_ID IN (
+WITH AverageGoals AS (
+    SELECT
+        AVG(Tore_scored) AS Average_Tore
+    FROM (
         SELECT
-            Spieler_ID,
+            Turnier_ID,
+            COUNT(*) AS Tore_scored
         FROM
-            Spieler
-        WHERE
-            Turnieranzahl < 2)
-GROUP BY
-    S.Spieler_ID,
-    TR.Turniername,
-    S.Familienname,
-    S.Vorname
+            Tore
+        GROUP BY
+            Turnier_ID)
+),
+TournamentsWithGoals AS (
+    SELECT
+        Turnier_ID,
+        COUNT(*) AS Tore_scored
+    FROM
+        Tore
+    GROUP BY
+        Turnier_ID
+)
+SELECT
+    t.Turnier_ID,
+    t.Tore_scored
+FROM
+    TournamentsWithGoals t,
+    AverageGoals a
+WHERE
+    t.Tore_scored > 0
+    AND t.Tore_scored > a.Average_Tore
 ORDER BY
-    S.Spieler_ID DESC,
-    TR.Turniername ASC,
-    scored_Tore DESC
+    t.Turnier_ID DESC
 LIMIT 10;
 
