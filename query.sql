@@ -1,30 +1,26 @@
-CREATE VIEW Union_Turnier_IDs AS
+WITH SpielerInAllTurniere AS (
+    SELECT
+        Spieler_ID
+    FROM
+        Tore T
+    GROUP BY
+        Spieler_ID
+    HAVING
+        COUNT(DISTINCT Turnier_ID) = (
+            SELECT
+                COUNT(DISTINCT Turnier_ID)
+            FROM
+                Tore))
 SELECT
-    Turnier_ID,
-    Spieler_ID
+    S.Spieler_ID,
+    S.Familienname,
+    S.Vorname
 FROM
-    tore
-UNION
-SELECT
-    Turnier_ID,
-    Spieler_ID
-FROM
-    Spielerauftritte;
-
-SELECT
-    COUNT(G.Spieler_ID) AS scored_Tore,
-    A.Spieler_ID,
-    A.Turnier_ID
-FROM
-    Union_Turnier_IDs A
-    LEFT JOIN Tore G ON A.Turnier_ID = G.Turnier_ID
-        AND A.Spieler_ID = G.Spieler_ID
-GROUP BY
-    A.Spieler_ID,
-    A.Turnier_ID
+    Spieler S
+    INNER JOIN SpielerInAllTurniere I ON S.Spieler_ID = I.Spieler_ID
 ORDER BY
-    scored_Tore ASC,
-    A.Spieler_ID DESC,
-    A.Turnier_ID ASC
+    S.Spieler_ID ASC,
+    S.Familienname ASC,
+    S.Vorname ASC
 LIMIT 10;
 
